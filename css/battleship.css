@@ -10,6 +10,37 @@ div#board{
     background: url("../img/board.jpg") no-repeat;
 }
 
+div#messageArea{
+    position: absolute;
+    top:0;
+    left:0;
+    color:rgb(83,175,19);
+}
+
 table{
-    background-color: red;
+    /* background-color: red; */
+    position: absolute;
+    /* position the table so it aligns with the background img */
+    top: 98px;
+    left:173px;
+    border-spacing: 0px;
+}
+
+td{
+    width: 94px;
+    height: 94px;
+}
+
+form{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 15px;
+    background-color: rgb(83,175,19);
+}
+
+form input{
+    background-color: rgb(152,207,113);
+    border-color: rgb(83,175,19);
+    font-size: 1em;
 }
