@@ -9,3 +9,7 @@ div#board{
     margin: auto;
     background: url("../img/board.jpg") no-repeat;
 }
+
+table{
+    background-color: red;
+}
