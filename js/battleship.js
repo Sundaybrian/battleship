@@ -1,5 +1,8 @@
-// implementint the view object that will control the displayed messages
-//onn the screen
+/**
+ *  implementint the view object that will control the displayed messages
+ * on the screen
+ */
+
 
 var view = {
 
@@ -26,12 +29,16 @@ var view = {
 // view.displayMessage("testing testing");
 // view.displayMiss("54");
 
-// the model to hold and control the game state
+/**
+ * The model to hold and control the game state
+ * 
+ * 
+ */
 
 var model = {
   boardSize: 7, //size of the grid
   numShips: 3, //number of ships
-  shipLength: 3, //num of location each ship occupies
+  shipLength: 3, //number of location each ship occupies(3boxes vertically/horizontally)
   shipsSunk: 0,
 
   ships: [{
@@ -50,7 +57,7 @@ var model = {
 
   fire: function (guess) {
     for (let i = 0; i < this.numShips; i++) {
-      var ship = this.ships[i]; //grab each ship from the array of objects
+      var ship = this.ships[i]; //grab each ship obj from the array of objects
 
       var index = ship.locations.indexOf(guess); //[i].locations.indexOf(guess)
 
@@ -61,11 +68,11 @@ var model = {
         view.displayHit(guess);
         view.displayMessage("Hit");
 
-        //check after we have a hit if the ship is sunk,then increase num of ships sunk
+        //check after we have a hit if the ship is sunk,then increase number of ships sunk
         if (this.isSunk(ship)) {
           view.displayMessage("You sank my battleship!")
           this.shipsSunk++;
-          
+
         }
 
         return true;
@@ -82,7 +89,7 @@ var model = {
 
   isSunk: function (ship) {
     /**method takes a ship and checks every possible location for a hit
-     * if there is location that doesnt have a hit,thus ship is floating
+     * if there is location that doesnt have a hit,means ship is floating
      * return false.
      * otherwise return true
      */
@@ -98,6 +105,54 @@ var model = {
 
 };
 
-model.fire("06");
-model.fire("11");
-model.fire("54");
+// model.fire("06");
+// model.fire("11");
+// model.fire("54");
+
+
+/**
+ * Gets and process the players guess like "A0 or G6,etc"
+ * Keeps track of the number of guesses
+ * it parses("A0" to "00") and passes converted guess to the model
+ * Determines when the games is over
+ * 
+ */
+var controller = {
+  guesses: 0,
+
+  processGuess:function (guess) {
+
+
+    },
+
+  parseGuess: function (guess) {
+    var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
+
+    if (guess === null || guess.length !== 2) {
+      alert("Please enter a letter and a number on the board");
+
+    } else {
+      firstChar = guess.charAt(0);
+      var row = alphabet.indexOf(firstChar);
+      var column = guess.charAt(1);
+
+      if (isNaN(row) || isNaN(column)) {
+        alert("OOps,that isn't on the board my friend");
+
+      } else if (row < 0 || row >= model.boardSize || column < 0 || column >= model.boardSize) {
+        alert("Unless the board is stretching to the moon,that's totally off the board mate");
+
+      } else {
+
+        return row + column;
+      }
+    }
+
+    return null;
+
+  }
+};
+
+console.log(controller.parseGuess("A0"));
+console.log(controller.parseGuess("xg"));
+console.log(controller.parseGuess("A7"));
