@@ -41,7 +41,8 @@ var model = {
   shipLength: 3, //number of location each ship occupies(3boxes vertically/horizontally)
   shipsSunk: 0,
 
-  ships: [{
+  ships: [
+    {
       locations: ["06", "16", "26"],
       hits: ["", "", ""]
     }, //ship 1
@@ -70,13 +71,12 @@ var model = {
 
         //check after we have a hit if the ship is sunk,then increase number of ships sunk
         if (this.isSunk(ship)) {
-          view.displayMessage("You sank my battleship!")
+          view.displayMessage("You sank my battleship!");
           this.shipsSunk++;
-
+          // console.log(this.shipsSunk++); dont you ever do this 
         }
 
         return true;
-
       }
 
     }
@@ -93,14 +93,12 @@ var model = {
      * return false.
      * otherwise return true
      */
-    for (let i = 0; i < this.shipLength; i++) {
-      if (ship.hits[i] !== "hit") {
-        return false;
-
-      }
-      return true;
-
+    for (let k = 0; k < this.shipLength; k++) {
+        if (ship.hits[k] !== "hit") {
+          return false;
+        }
     }
+    return true;
   }
 
 };
@@ -120,21 +118,32 @@ var model = {
 var controller = {
   guesses: 0,
 
-  processGuess:function (guess) {
+  processGuess: function (guess) {
+    var location = parseGuess(guess);
 
+    if (location) {
+      this.guesses++;
+      var hit = model.fire(location);
 
-    },
+      if (hit && model.shipsSunk === model.numShips) {
+        view.displayMessage("You sunk all my battleships,in " + this.guesses + "guesses");
+        console.log(hit, this.guesses, model.shipsSunk, model.numShips);
+      }
+    }
 
-  parseGuess: function (guess) {
-    var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
+  }
+};
 
-    if (guess === null || guess.length !== 2) {
-      alert("Please enter a letter and a number on the board");
+function parseGuess(guess) {
+  var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
 
-    } else {
-      firstChar = guess.charAt(0);
-      var row = alphabet.indexOf(firstChar);
-      var column = guess.charAt(1);
+  if (guess === null || guess.length !== 2) {
+    alert("Please enter a letter and a number on the board");
+
+  } else {
+    firstChar = guess.charAt(0);
+    var row = alphabet.indexOf(firstChar);
+    var column = guess.charAt(1);
 
       if (isNaN(row) || isNaN(column)) {
         alert("OOps,that isn't on the board my friend");
@@ -146,13 +155,20 @@ var controller = {
 
         return row + column;
       }
-    }
-
-    return null;
-
   }
-};
 
-console.log(controller.parseGuess("A0"));
-console.log(controller.parseGuess("xg"));
-console.log(controller.parseGuess("A7"));
+  return null;
+
+}
+
+
+controller.processGuess("A0");
+controller.processGuess("A6");
+controller.processGuess("B6");
+controller.processGuess("C6");
+controller.processGuess("C4");
+controller.processGuess("D4");
+controller.processGuess("E4");
+controller.processGuess("B0");
+controller.processGuess("B1");
+controller.processGuess("B2");
