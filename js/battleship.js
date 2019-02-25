@@ -179,6 +179,11 @@ function parseGuess(guess) {
 function init(){
   var fireButton=document.getElementById("fireButton");
   fireButton.onclick=handleFireButton;
+
+  /** A new handler. This one handles key
+    press events from the HTML form input field*/
+  var guessInput=document.getElementById("guessInput");
+  guessInput.onkeypress=handleKeyPress;
 }
 
 function handleFireButton(){
@@ -188,6 +193,21 @@ function handleFireButton(){
 
   //resets the form input element to be an empty string after submitting
   guessInput.value="";
+}
+
+
+/** the key press handler is
+called whenever you press a key in
+the form input in the page.*/
+function handleKeyPress(e){
+  var fireButton=document.getElementById("fireButton");
+  if (e.keyCode===13 || e.which == 13) {
+    console.log(e.keycode);
+    fireButton.click();
+    
+    // stops page reload by submitting the form...hahaha didnt know that
+    return false;
+  }
 }
 
 window.onload=init;
