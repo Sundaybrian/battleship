@@ -41,20 +41,35 @@ var model = {
   shipLength: 3, //number of location each ship occupies(3boxes vertically/horizontally)
   shipsSunk: 0,
 
+  // ships: [
+  //   {
+  //     locations: ["06", "16", "26"],
+  //     hits: ["", "", ""]
+  //   }, //ship 1
+  //   {
+  //     locations: ["24", "34", "44"],
+  //     hits: ["", "", ""]
+  //   }, //ship2
+  //   {
+  //     locations: ["10", "11", "12"],
+  //     hits: ["", "", ""]
+  //   } //ship 3
+  // ],
+
   ships: [
     {
-      locations: ["06", "16", "26"],
+      locations: [0, 0, 0],
       hits: ["", "", ""]
     }, //ship 1
     {
-      locations: ["24", "34", "44"],
+      locations: [0, 0, 0],
       hits: ["", "", ""]
     }, //ship2
     {
-      locations: ["10", "11", "12"],
-      hits: ["", "", ""]
+      locations: [0, 0, 0],hits: ["", "", ""]
     } //ship 3
   ],
+
 
   fire: function (guess) {
     for (let i = 0; i < this.numShips; i++) {
@@ -87,19 +102,93 @@ var model = {
 
   },
 
-  isSunk: function (ship) {
     /**method takes a ship and checks every possible location for a hit
      * if there is location that doesnt have a hit,means ship is floating
-     * return false.
-     * otherwise return true
+     * return false.otherwise return true
      */
+  isSunk: function (ship) {
+  
     for (let k = 0; k < this.shipLength; k++) {
         if (ship.hits[k] !== "hit") {
           return false;
         }
     }
     return true;
+  },
+
+  generateShipLocations:function(){
+    var locations;
+// for each ship we generate newlocation
+    for (var i = 0; i < this.numShips; i++) {
+
+      do{
+
+        locations=this.generateShip();
+
+      }while(this.collisions(locations));
+
+      this.ships[i].locations=locations;
+    }
+    console.log("Ships array: ");
+    console.log(this.ships);
+  },
+
+  generateShip:function(){
+    var direction=Math.floor(Math.random() *2);
+    var row,col;
+
+    if(direction===1){
+      //generate  starting location for a horizontal ship
+      //a horizontal ship can exist on any row
+      row=Math.floor(Math.random() * this.boardSize);
+      col=Math.floor(Math.random() *(this.boardSize-this.shipLength));
+
+    }else{
+      //generate  starting location for a vertical ship
+      //a vertical ship can exist on any column
+      row=Math.floor(Math.random() * (this.boardSize-this.shipLength));
+      col=Math.floor(Math.random() * this.boardSize);
+
+
+    }
+
+    var newShipLocations=[];
+    // loop for the number of locations in a ship
+    for (var i = 0; i < this.shipLength; i++) {
+      if (direction===1) {
+        //add location to array for new horizontal ship
+        newShipLocations.push(row + ""+ (col + i));
+
+      } else {
+        //add location to array for vertical ship
+        newShipLocations.push((row + i) +""+ col);
+      }
+
+    }
+      //return the filled array to the generateShipLocation method
+    return newShipLocations;
+
+  },
+
+  /* avoiding collisions of generated ships i.e no ship overlaps another*/
+  collisions:function(locations){
+    //loop for every ship on the board
+    for (var i = 0; i < this.numShips; i++) {
+      var ship=model.ships[i];
+
+//check to see if any location of the newly generated ship are in any existing ship
+      for (var j = 0; j < locations.length; j++) {
+        if (ship.locations.indexOf(locations[j]) >=0) {
+          /*meaning collisons and thus the generateShipLocations
+          method do while, will have to loop again to create a new ship*/ 
+          return true;
+        }
+      }
+     }
+     //no collision found
+     return false;
   }
+
 
 };
 
@@ -126,13 +215,15 @@ var controller = {
       var hit = model.fire(location);
 
       if (hit && model.shipsSunk === model.numShips) {
-        view.displayMessage("You sunk all my battleships,in " + this.guesses + "guesses");
+        view.displayMessage("You sunk all my battleships,in " + this.guesses + " guesses");
         console.log(hit, this.guesses, model.shipsSunk, model.numShips);
       }
     }
 
   }
 };
+
+
 
 function parseGuess(guess) {
   var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
@@ -184,6 +275,10 @@ function init(){
     press events from the HTML form input field*/
   var guessInput=document.getElementById("guessInput");
   guessInput.onkeypress=handleKeyPress;
+
+
+  // generate shipLocation when the page is loaded
+  model.generateShipLocations();
 }
 
 function handleFireButton(){
@@ -193,6 +288,7 @@ function handleFireButton(){
 
   //resets the form input element to be an empty string after submitting
   guessInput.value="";
+
 }
 
 
@@ -205,7 +301,7 @@ function handleKeyPress(e){
     console.log(e.keycode);
     fireButton.click();
     
-    // stops page reload by submitting the form...hahaha didnt know that
+    // stops page reload by preventing the form submitting itself...hahaha didnt know that
     return false;
   }
 }
