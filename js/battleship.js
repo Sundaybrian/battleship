@@ -75,11 +75,11 @@ var model = {
     for (let i = 0; i < this.numShips; i++) {
       var ship = this.ships[i]; //grab each ship obj from the array of objects
 
-      var index = ship.locations.indexOf(guess); //[i].locations.indexOf(guess)
+      var index = ship.locations.indexOf(guess); //check for a hit
 
       if (index >= 0) {
         //if we get an index>=0,then users guess is in the locations array.we have a hit 
-        //mark the hits array at the same index
+        //mark the hits array at the same index as the location
         ship.hits[index] = "hit";
         view.displayHit(guess);
         view.displayMessage("Hit");
@@ -153,7 +153,7 @@ var model = {
     }
 
     var newShipLocations=[];
-    // loop for the number of locations in a ship
+    // loop for the number of locations a ship has to occupy
     for (var i = 0; i < this.shipLength; i++) {
       if (direction===1) {
         //add location to array for new horizontal ship
@@ -293,8 +293,8 @@ function handleFireButton(){
 
 
 /** the key press handler is
-called whenever you press a key in
-the form input in the page.*/
+called whenever you press the enter key in
+the form input on the page.*/
 function handleKeyPress(e){
   var fireButton=document.getElementById("fireButton");
   if (e.keyCode===13 || e.which == 13) {
