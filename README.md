@@ -62,11 +62,17 @@ var model = {
     collision: function(locations) { ... }
 };
 ```
+
 1.The Grid is a 7by7
+
 2.numShips is the number of ships in the board.
+
 3.shipLength is the boxes each ship occupies either vertically or horizontally.
+
 4.shipsSunk is the number of ships a player sink,if all are sunk game ends.
+
 5.ships is an **array of objects** containing the 3 ships and their properties.
+
 6.fire method checks each ship and see's if it occupies a given location.
 If it does, you get a hit, and it marks the corresponding item
 in the hits array (and let the view object know you got a hit) and returns true. 
@@ -244,6 +250,7 @@ var controller = {
 };
 
 ```
+
 1.The controller uses the parseGuess function to convert user form inputs into the 
 required string format that will be passed to the model.fire() method.
 
